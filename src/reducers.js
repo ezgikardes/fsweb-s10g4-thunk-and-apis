@@ -11,7 +11,7 @@ const initial = {
   favs: [],
   current: null,
   error: null,
-  loading: true,
+  loading: false,
 };
 
 function writeFavsToLocalStorage(state) {
@@ -25,13 +25,15 @@ function readFavsFromLocalStorage() {
 export function myReducer(state = initial, action) {
   switch (action.type) {
     case FAV_ADD:
-      return state;
+      let newState = {...state,  favs: [...state.favs, action.payload]};
+      writeFavsToLocalStorage(newState);
+      return newState;
 
     case FAV_REMOVE:
-      return state;
+      return {...state, favs: state.favs.filter(i => i.message !== action.payload)};
 
     case FETCH_SUCCESS:
-      return state;
+      return {...state, loading: false, current: action.payload, error: null };
 
     case FETCH_LOADING:
       return state;
@@ -40,7 +42,7 @@ export function myReducer(state = initial, action) {
       return state;
 
     case GET_FAVS_FROM_LS:
-      return state;
+      return {...state, favs: readFavsFromLocalStorage || []};
 
     default:
       return state;

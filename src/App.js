@@ -1,15 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, NavLink } from "react-router-dom";
 import Item from "./components/Item";
 import FavItem from "./components/FavItem";
+import { useDispatch, useSelector } from "react-redux"; 
+import { fetchAnother, addFav, getFavsFromLocalStorage } from "./actions";
 
 export default function App() {
   const loading = false;
-  const current = null;
-  const favs = [];
+  const current = useSelector(store => store.current);
+  const favs = useSelector(store => store.favs);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchAnother())
+    console.log("veri çekildi")
+  }, [])
 
   function addToFavs() {
+    dispatch(addFav(current));
+    console.log("favorilere eklendi")
   }
+
+  function getFavs() {
+    dispatch(getFavsFromLocalStorage())
+    }
 
 
   return (
@@ -56,9 +70,9 @@ export default function App() {
           <div className="flex flex-col gap-3">
             {favs.length > 0
               ? favs.map((item) => (
-                <FavItem key={item.key} id={item.key} title={item.activity} />
+                <FavItem key={item.key} id={item.key} title={item.message} />
               ))
-              : <div className="bg-white p-6 text-center shadow-md">Henüz bir favoriniz yok</div>
+              : getFavs
             }
           </div>
         </Route>
