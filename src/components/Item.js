@@ -9,7 +9,7 @@ function Item({ data }) {
       src={data.message}> 
       </img>
     </div>
-  )
+  ) 
 }
 
 export default Item
